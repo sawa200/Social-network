@@ -1,0 +1,4 @@
+<h1>Friend Requests</h1>
+{% for req in requests %}
+    <p>{{ req.from_user.username }} wants to be your friend.</p>
+{% endfor %}

@@ -1,0 +1,98 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f0f2f5;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #2575fc;
+    color: white;
+    padding: 15px;
+}
+
+header h1 {
+    margin: 0;
+    display: inline-block;
+}
+
+nav {
+    display: inline-block;
+    margin-left: 20px;
+}
+
+nav a, nav button {
+    color: white;
+    text-decoration: none;
+    margin-right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+nav button:hover, nav a:hover {
+    text-decoration: underline;
+}
+
+.posts {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 15px;
+}
+
+.post {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+.btn-logout {
+    padding: 10px 20px;
+    background-color: #2575fc; /* как остальные кнопки */
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.btn-logout:hover {
+    background-color: #1a5edb;
+}
+/* Форма регистрации и входа */
+.auth-box input {
+    width: 100%;           /* поля растягиваются на всю ширину формы */
+    padding: 14px;         /* увеличенный внутренний отступ */
+    font-size: 16px;       /* крупнее текст */
+    border-radius: 10px;   /* скругленные углы */
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    margin-bottom: 15px;   /* отступ между полями */
+}
+
+.auth-box button {
+    width: 100%;
+    padding: 14px;
+    font-size: 18px;
+    border-radius: 10px;
+    border: none;
+    background-color: #2575fc;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.auth-box button:hover {
+    background-color: #1a5edb;
+}
+
+.auth-box label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 5px;
+    display: block;
+}

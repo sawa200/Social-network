@@ -1,0 +1,30 @@
+{% extends "feed/base.html" %}
+{% load widget_tweaks %}
+{% block title %}Лента новостей 📰{% endblock %}
+
+{% block content %}
+<h1>Лента новостей 📰✨</h1>
+
+{% if user.is_authenticated %}
+    <p>Привет, {{ user.nickname|default:user.email }} 👋</p>
+    <a href="{% url 'profile' %}" class="btn">Мой профиль 📝</a>
+    <a href="{% url 'create_post' %}" class="btn">Создать пост ✏️</a>
+{% else %}
+    <p>Привет, гость! 🌟</p>
+    <a href="{% url 'login' %}" class="btn">Войти 🔑</a>
+    <a href="{% url 'register' %}" class="btn">Зарегистрироваться 👤</a>
+{% endif %}
+
+<div class="posts">
+    {% for post in posts %}
+        <div class="post">
+            <h3>📝 {{ post.title }}</h3>
+            <p>{{ post.content }}</p>
+            <small>Автор: {{ post.author.nickname|default:post.author.email }} | {{ post.created_at|date:"d.m.Y H:i" }}</small>
+        </div>
+    {% empty %}
+        <p>Нет постов 😢</p>
+    {% endfor %}
+</div>
+{% endblock %}
+

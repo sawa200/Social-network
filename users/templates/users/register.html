@@ -1,0 +1,52 @@
+
+{% extends "feed/base.html" %}
+
+{% load widget_tweaks %}
+{% block title %}Регистрация 👤{% endblock %}
+
+{% block content %}
+<div class="auth-box" style="
+    max-width: 400px; 
+    margin: 50px auto; 
+    padding: 30px; 
+    background: #fff; 
+    border-radius: 15px; 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+">
+    <h2 style="text-align:center; margin-bottom: 25px;">Регистрация 👤</h2>
+    <form method="POST" style="display: flex; flex-direction: column;">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        <label for="{{ form.nickname.id_for_label }}" style="margin-bottom:5px;">🌟 Никнейм</label>
+        {{ form.nickname }}
+
+        <label for="{{ form.email.id_for_label }}" style="margin-bottom:5px;">📧 Email</label>
+        {{ form.email }}
+
+        <label for="{{ form.password1.id_for_label }}" style="margin-bottom:5px;">🔒 Пароль</label>
+        {{ form.password1 }}
+
+        <label for="{{ form.password2.id_for_label }}" style="margin-bottom:5px;">🔒 Повтор пароля</label>
+        {{ form.password2 }}
+
+        <button type="submit" style="
+            margin-top: 15px; 
+            padding: 12px; 
+            background-color: #2575fc; 
+            color: #fff; 
+            border: none; 
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        ">Зарегистрироваться 🚀</button>
+    </form>
+    <a href="{% url 'login' %}" style="
+        display: block; 
+        text-align:center; 
+        margin-top: 15px; 
+        color: #2575fc;
+        text-decoration: none;
+    ">Уже есть аккаунт? Войти 🔑</a>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Профиль 📝</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="profile-box">
+        <h2>Привет, {{ user.nickname }} 👋</h2>
+        {% if user.avatar %}
+            <img src="{{ user.avatar.url }}" alt="Avatar" class="avatar">
+        {% else %}
+            <p>Нет аватара 😢</p>
+        {% endif %}
+        <p>📧 Email: {{ user.email }}</p>
+
+        <h3>Редактировать профиль</h3>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Сохранить</button>
+        </form>
+    </div>
+</body>
+</html>

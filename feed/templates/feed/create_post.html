@@ -1,0 +1,14 @@
+{% extends "feed/base.html" %}
+{% load widget_tweaks %}
+{% block title %}Создать пост ✏️{% endblock %}
+
+{% block content %}
+<h2>Создать пост</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <input type="text" name="title" placeholder="Заголовок" required><br><br>
+    <textarea name="content" placeholder="Содержимое поста" required></textarea><br><br>
+    <button type="submit">Опубликовать</button>
+</form>
+{% endblock %}
