@@ -1,14 +1,46 @@
 {% extends "feed/base.html" %}
 {% load widget_tweaks %}
+
 {% block title %}Создать пост ✏️{% endblock %}
 
 {% block content %}
-<h2>Создать пост</h2>
+<div class="create-post-container">
+    <h2>Создать пост ✏️</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
 
-<form method="POST">
-    {% csrf_token %}
-    <input type="text" name="title" placeholder="Заголовок" required><br><br>
-    <textarea name="content" placeholder="Содержимое поста" required></textarea><br><br>
-    <button type="submit">Опубликовать</button>
-</form>
+        <div class="form-field">
+            {{ form.title.label_tag }}
+            {{ form.title }}
+            {% if form.title.errors %}<div class="error">{{ form.title.errors }}</div>{% endif %}
+        </div>
+
+        <div class="form-field">
+            {{ form.content.label_tag }}
+            {{ form.content }}
+            {% if form.content.errors %}<div class="error">{{ form.content.errors }}</div>{% endif %}
+        </div>
+
+        <div class="form-field">
+            {{ form.image.label_tag }}
+            {{ form.image }}
+            {% if form.image.errors %}<div class="error">{{ form.image.errors }}</div>{% endif %}
+        </div>
+        
+        <div class="form-field">
+            {{ form.video.label_tag }}
+            {{ form.video }}
+            {% if form.video.errors %}<div class="error">{{ form.video.errors }}</div>{% endif %}
+        </div>
+
+        <div class="form-field">
+            {{ form.youtube_url.label_tag }}
+            {{ form.youtube_url }}
+            {% if form.youtube_url.errors %}<div class="error">{{ form.youtube_url.errors }}</div>{% endif %}
+        </div>
+
+        <button type="submit" class="btn">Опубликовать 🚀</button>
+    </form>
+</div>
 {% endblock %}

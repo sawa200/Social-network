@@ -1,3 +1,4 @@
+/* Общие стили для страницы */
 body {
     font-family: Arial, sans-serif;
     background: #f0f2f5;
@@ -5,19 +6,21 @@ body {
     padding: 0;
 }
 
+/* Шапка сайта */
 header {
     background-color: #2575fc;
     color: white;
     padding: 15px;
+    display: flex;
+    align-items: center;
 }
 
 header h1 {
     margin: 0;
-    display: inline-block;
+    font-size: 24px;
 }
 
 nav {
-    display: inline-block;
     margin-left: 20px;
 }
 
@@ -29,12 +32,14 @@ nav a, nav button {
     border: none;
     cursor: pointer;
     font-size: 14px;
+    transition: 0.3s;
 }
 
 nav button:hover, nav a:hover {
     text-decoration: underline;
 }
 
+/* Посты */
 .posts {
     max-width: 800px;
     margin: 20px auto;
@@ -43,14 +48,26 @@ nav button:hover, nav a:hover {
 
 .post {
     background: #ffffff;
-    padding: 15px;
+    padding: 20px;
     border-radius: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
+
+.post image {
+    width: 100px;      
+    height: 200px;     
+    object-fit: cover; 
+    border-radius: 10px; 
+    display: block;
+    margin: 10px 0;
+}
+
+
+
 .btn-logout {
     padding: 10px 20px;
-    background-color: #2575fc; /* как остальные кнопки */
+    background-color: #2575fc;
     color: white;
     border: none;
     border-radius: 10px;
@@ -62,15 +79,28 @@ nav button:hover, nav a:hover {
 .btn-logout:hover {
     background-color: #1a5edb;
 }
-/* Форма регистрации и входа */
-.auth-box input {
-    width: 100%;           /* поля растягиваются на всю ширину формы */
-    padding: 14px;         /* увеличенный внутренний отступ */
-    font-size: 16px;       /* крупнее текст */
-    border-radius: 10px;   /* скругленные углы */
+
+
+.auth-box {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 25px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    text-align: center; 
+}
+
+.auth-box input, 
+.auth-box textarea,
+.auth-box select {
+    width: 100%;            
+    padding: 14px;         
+    font-size: 16px;       
+    border-radius: 10px;    
     border: 1px solid #ccc;
     box-sizing: border-box;
-    margin-bottom: 15px;   /* отступ между полями */
+    margin-bottom: 15px;    
 }
 
 .auth-box button {
@@ -95,4 +125,17 @@ nav button:hover, nav a:hover {
     color: #555;
     margin-bottom: 5px;
     display: block;
+}
+
+/* Ссылки в форме */
+.auth-box .login-link {
+    display: block;
+    margin-top: 15px;
+    font-size: 14px;
+    color: #2575fc;
+    text-decoration: none;
+}
+
+.auth-box .login-link:hover {
+    text-decoration: underline;
 }
