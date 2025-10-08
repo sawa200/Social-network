@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
-
+from .models import CustomUser
 User = get_user_model()
 
 class CustomUserCreationForm(forms.ModelForm):
@@ -44,6 +44,17 @@ class CustomUserCreationForm(forms.ModelForm):
             user.save()
         return user
 
-
+class AvatarForm (forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['avatar']
 class CustomAuthenticationForm(AuthenticationForm):
     username = forms.CharField(label="Никнейм", widget=forms.TextInput(attrs={'placeholder': 'Ваш никнейм 🌟'}))
+
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser 
+        fields = ['nickname', 'avatar']
+
+

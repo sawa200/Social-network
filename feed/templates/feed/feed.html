@@ -1,0 +1,18 @@
+<div class="comments">
+    <h4>💬 Комментарии:</h4>
+    {% for comment in post.comments.all %}
+        <p><b>{{ comment.author.nickname|default:comment.author.email }}</b>: {{ comment.text }}</p>
+    {% empty %}
+        <p>Нет комментариев 😢</p>
+    {% endfor %}
+
+    {% if user.is_authenticated %}
+        <form method="post" action="{% url 'add_comment' post.id %}">
+            {% csrf_token %}
+            <textarea name="text" rows="2" placeholder="Напишите комментарий..."></textarea><br>
+            <button type="submit" class="btn">Отправить 💬</button>
+        </form>
+    {% else %}
+        <p><a href="{% url 'login' %}">Войдите</a>, чтобы оставить комментарий</p>
+    {% endif %}
+</div>

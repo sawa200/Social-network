@@ -1,0 +1,12 @@
+{% extends "feed/base.html" %}
+{% block title %}Редактирование профиля{% endblock %}
+
+{% block content %}
+<h1>Редактирование профиля</h1>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn">Сохранить</button>
+</form>
+{% endblock %}

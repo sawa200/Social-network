@@ -1,0 +1,34 @@
+{% extends "feed/base.html" %}
+{% block title %}Друзья {{ profile_user.nickname|default:profile_user.email }}{% endblock %}
+
+{% block content %}
+<h2>👥 Друзья {{ profile_user.nickname|default:profile_user.email }}</h2>
+
+{% if friends %}
+    <h3>Все друзья:</h3>
+    <ul>
+        {% for friend in friends %}
+            <li>
+                <a href="{% url 'users:user_profile' friend.id %}">
+                    {{ friend.nickname|default:friend.email }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>У пользователя пока нет друзей 😢</p>
+{% endif %}
+
+{% if mutual_friends %}
+    <h3>🤝 Совместные друзья с вами:</h3>
+    <ul>
+        {% for friend in mutual_friends %}
+            <li>
+                <a href="{% url 'users:user_profile' friend.id %}">
+                    {{ friend.nickname|default:friend.email }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}

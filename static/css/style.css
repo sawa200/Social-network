@@ -7,6 +7,13 @@ body {
 }
 
 /* Шапка сайта */
+.avatar {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
 header {
     background-color: #2575fc;
     color: white;
@@ -54,17 +61,40 @@ nav button:hover, nav a:hover {
     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
-.post image {
-    width: 100px;      
-    height: 200px;     
+.post img {
+    width: 100%;      
+    height: auto;      
     object-fit: cover; 
     border-radius: 10px; 
     display: block;
     margin: 10px 0;
 }
 
+.post video {
+    width: 50%;      /* растянуть на всю ширину поста */
+    max-width: 50%;  /* не больше поста */
+    height: auto;     /* сохранить пропорции */
+    border-radius: 10px;
+    margin-top: 10px;
+    display: block;
+}
 
 
+.post-video {
+    max-height: 400px; 
+}
+
+.post iframe {
+    max-width: 70%;
+    height: auto;
+    border-radius: 10px;
+    margin: 10px 0;
+    display: block;
+}
+
+.post .post-media {
+    text-align: center;
+}
 .btn-logout {
     padding: 10px 20px;
     background-color: #2575fc;
@@ -127,7 +157,6 @@ nav button:hover, nav a:hover {
     display: block;
 }
 
-/* Ссылки в форме */
 .auth-box .login-link {
     display: block;
     margin-top: 15px;
@@ -139,3 +168,61 @@ nav button:hover, nav a:hover {
 .auth-box .login-link:hover {
     text-decoration: underline;
 }
+.comments {
+    margin-top: 20px;
+    padding-left: 20px; /* общий отступ слева */
+    max-width: 700px;   /* чтобы не растягивалось на весь экран */
+}
+
+.comment {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 10px 15px;
+    margin-bottom: 12px;
+    margin-left: 20px; /* двигаем от края ещё больше */
+}
+
+.comment-content {
+    margin: 0 0 5px;
+    font-size: 15px;
+}
+.comment-meta {
+    font-size: 12px;
+    color: #666;
+    text-align: right; /* дата и автор справа */
+}
+.stat-link {
+    text-decoration: none;
+    font-weight: bold;
+    color: #007bff;
+    transition: 0.2s;
+    margin-right: 20px;
+}
+.stat-link:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+.profile-stats {
+    display: flex;
+    justify-content: center; /* центрирует всё по горизонтали */
+    align-items: center;
+    gap: 25px; /* расстояние между элементами */
+    margin-top: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap; /* чтобы на мобильных переносились */
+}
+
+.stat-item {
+    font-weight: 600;
+    color: #007bff;
+    text-decoration: none;
+    font-size: 16px;
+    transition: 0.2s;
+}
+
+.stat-item:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+

@@ -1,18 +1,10 @@
 {% extends "feed/base.html" %}
-{% block title %}Лента новостей 📰{% endblock %}
+{% block title %}Лента друзей 👥{% endblock %}
 
 {% block content %}
-<h1>Лента новостей 📰✨</h1>
+<h1>Лента друзей 👥✨</h1>
 
-{% if user.is_authenticated %}
-    <p>Привет, {{ user.nickname|default:user.email }} 👋</p>
-    <a href="{% url 'users:profile' %}" class="btn">Мой профиль 📝</a>
-    <a href="{% url 'feed:create_post' %}" class="btn">Создать пост ✏️</a>
-{% else %}
-    <p>Привет, гость! 🌟</p>
-    <a href="{% url 'users:login' %}" class="btn">Войти 🔑</a>
-    <a href="{% url 'users:register' %}" class="btn">Зарегистрироваться 👤</a>
-{% endif %}
+
 
 <div class="posts">
     {% for post in posts %}
@@ -45,8 +37,6 @@
             {% endif %}
 
             <div class="post-actions" style="display: flex; align-items: center; gap: 10px;">
-            
-
                 <form method="post" action="{% url 'feed:like_post' post.id %}" class="like-form" data-post-id="{{ post.id }}">
                     {% csrf_token %}
                     <button type="submit" class="btn-like" id="like-btn-{{ post.id }}">
@@ -59,25 +49,23 @@
                 </form>
                 <span id="like-count-{{ post.id }}">{{ post.likes.count }}</span>
 
-
                 <a href="{% url 'feed:post_detail' post.id %}" class="btn" style="margin-left: 15px;">
                     <i class="fa-solid fa-comment"></i> {{ post.comments.count }}
                 </a>
             </div>
-
-            
         </div>
     {% empty %}
-        <p>Нет постов 😢</p>
+        <p>Нет постов от друзей 😢</p>
     {% endfor %}
-    <script>
+</div>
+
+<script>
 document.addEventListener('DOMContentLoaded', () => {
     const likeForms = document.querySelectorAll('.like-form');
 
     likeForms.forEach(form => {
         form.addEventListener('submit', function(e) {
-            e.preventDefault(); // отменяем стандартный submit
-
+            e.preventDefault();
             const postId = this.dataset.postId;
             const url = this.action;
             const csrfToken = this.querySelector('[name=csrfmiddlewaretoken]').value;
@@ -109,6 +97,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 </script>
-
-</div>
 {% endblock %}

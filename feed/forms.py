@@ -1,10 +1,19 @@
 from django import forms
 from .models import Post
+from .models import Comment
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={'rows': 2, 'placeholder': 'Напишите комментарий...'})
+        }
 
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content', 'image',"video", 'file', 'youtube_url']
+        fields = ['title', 'content', 'image',"video",  'youtube_url']
 
     def clean_image(self):
         image = self.cleaned_data.get('image')

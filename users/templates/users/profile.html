@@ -1,28 +1,62 @@
+{% extends "feed/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Профиль 📝</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
-    <div class="profile-box">
-        <h2>Привет, {{ user.nickname }} 👋</h2>
-        {% if user.avatar %}
-            <img src="{{ user.avatar.url }}" alt="Avatar" class="avatar">
-        {% else %}
-            <p>Нет аватара 😢</p>
-        {% endif %}
-        <p>📧 Email: {{ user.email }}</p>
 
-        <h3>Редактировать профиль</h3>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Сохранить</button>
-        </form>
+{% block title %}Профиль 📝{% endblock %}
+
+{% block content %}
+<div class="profile-box">
+
+    <h2>Привет, {{ user.nickname|default:user.email }} 👋</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Скрытое поле формы -->
+        <input type="file" name="avatar" id="id_avatar" style="display:none;" onchange="this.form.submit()">
+
+        <!-- Картинка аватара -->
+        {% if user.avatar %}
+            <img src="{{ user.avatar.url }}" alt="Аватар" class="avatar clickable" onclick="document.getElementById('id_avatar').click();">
+        {% else %}
+            <img src="{% static 'default_avatar.png' %}" alt="Аватар" class="avatar clickable" onclick="document.getElementById('id_avatar').click();">
+        {% endif %}
+        
+    </form>
+
+    <p>📧 Email: {{ user.email }}</p>
+
+    {% if user.profile.bio %}
+        <p>💬 {{ user.profile.bio }}</p>
+    {% endif %}
+
+    <hr>
+    <div class="profile-stats">
+        <p>📝 Постов: {{ user.post_set.count }}</p>
+        <p>👍 Лайков получено: {{ total_likes }}</p>
+        <p>💬 Комментариев: {{ user.comment_set.count }}</p>
     </div>
-</body>
-</html>
+
+    <hr>
+
+    <!-- Кнопка редактирования профиля -->
+    <a href="{% url 'users:edit_profile' %}" class="btn-edit-profile">Редактировать профиль</a>
+<hr>
+<h3>Ваши посты 📝</h3>
+<div class="posts-list">
+    {% if posts %}
+        {% for post in posts %}
+            <div class="post">
+                <p>{{ post.content }}</p>
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="Изображение поста" class="post-image">
+                {% endif %}
+                <p>👍 Лайков: {{ post.likes.count }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Постов пока нет 😢</p>
+    {% endif %}
+
+
+</div>
+{% endblock %}

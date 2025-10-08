@@ -1,0 +1,59 @@
+{% extends "feed/base.html" %}
+
+{% block content %}
+<h2>👥 Мои друзья</h2>
+
+{% if friends %}
+    <ul>
+        {% for friend in friends %}
+            <li>
+                {{ friend.nickname|default:friend.email }}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>У тебя пока нет друзей 😢</p>
+{% endif %}
+
+<hr>
+
+<h3>📩 Входящие заявки</h3>
+{% if incoming_requests %}
+    <ul>
+        {% for req in incoming_requests %}
+            <li>
+                {{ req.from_user.nickname|default:req.from_user.email }}
+                <form method="post" action="{% url 'users:accept_friend' req.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">✅ Принять</button>
+                </form>
+                <form method="post" action="{% url 'users:delete_friend_request' req.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">❌ Отклонить</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Нет входящих заявок</p>
+{% endif %}
+
+<hr>
+
+<h3>📤 Исходящие заявки</h3>
+{% if outgoing_requests %}
+    <ul>
+        {% for req in outgoing_requests %}
+            <li>
+                {{ req.to_user.nickname|default:req.to_user.email }}
+                <form method="post" action="{% url 'users:delete_friend_request' req.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">🚫 Отменить</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Нет исходящих заявок</p>
+{% endif %}
+{% endblock %}
