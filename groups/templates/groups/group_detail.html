@@ -1,0 +1,145 @@
+{% extends "feed/base.html" %}
+
+{% block title %}Група: {{ group.name }}{% endblock %}
+
+{% block content %}
+<div class="group-detail">
+    <h2>💬 Груповий чат: {{ group.name }}</h2>
+    <p>Створив: {{ group.creator.nickname|default:group.creator.email }}</p>
+    <p>Дата створення: {{ group.created_at|date:"d.m.Y H:i" }}</p>
+
+    <!-- 🧑‍🤝‍🧑 Учасники -->
+    <div class="group-members">
+        <h3>Учасники 👥</h3>
+        <ul class="group-members-list">
+            {% for member in members %}
+                <li class="member-item">
+                    <img src="{{ member.avatar.url|default:'/static/images/default-avatar.png' }}" class="member-avatar" alt="Аватар">
+                    <span class="member-username">{{ member.nickname|default:member.email }}</span>
+
+                    {% if request.user != member %}
+                        <a href="{% url 'chat:private_chat' member.nickname %}" class="btn btn-small">💬 Чат</a>
+                    {% endif %}
+
+                    {% if user_can_manage and member != group.creator %}
+                        {% if member in group.admins.all %}
+                            <form method="POST" action="{% url 'groups:remove_admin' group.id member.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-leave">Зняти адміна 🛑</button>
+                            </form>
+                        {% else %}
+                            <form method="POST" action="{% url 'groups:add_admin' group.id member.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-join">Призначити адміном ⭐</button>
+                            </form>
+                        {% endif %}
+
+                        <form method="POST" action="{% url 'groups:remove_member' group.id member.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-leave">Видалити ❌</button>
+                        </form>
+                    {% endif %}
+                </li>
+            {% empty %}
+                <li>Поки немає учасників.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- 📨 Заявки на вступ -->
+    {% if user == group.creator or user in group.admins.all %}
+        <div class="join-requests">
+            <h3>Заявки на вступ 📥</h3>
+            {% for join_request in pending_requests %}
+                <div class="join-request-item">
+                    <img src="{{ join_request.user.avatar.url|default:'/static/images/default-avatar.png' }}" class="member-avatar" alt="Аватар">
+                    <span>{{ join_request.user.nickname|default:join_request.user.email }}</span>
+                    <form method="POST" action="{% url 'groups:approve_join_request' join_request.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-join">Одобрити ✅</button>
+                    </form>
+                </div>
+            {% empty %}
+                <p>Поки немає заявок.</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- 💬 Чат -->
+    <div class="group-chat">
+        <h3>Повідомлення 💬</h3>
+        <div class="group-messages">
+            {% for message in group.messages.all %}
+                <div class="message-row {% if message.author == request.user %}sent{% else %}received{% endif %}">
+                    <img src="{{ message.author.avatar.url|default:'/static/images/default-avatar.png' }}" class="avatar" alt="Аватар">
+                    <div class="message-content">
+                        <span class="nickname">{{ message.author.nickname|default:message.author.email }}</span>
+                        <span class="text">{{ message.content }}</span>
+                        <span class="time">{{ message.created_at|date:"H:i d.m.Y" }}</span>
+
+                        {% if user == message.author or user in group.admins.all or user == group.creator %}
+                            <button class="btn-edit" onclick="toggleEdit({{ message.id }})">✏️ Редагувати</button>
+                            <div class="edit-form-container" id="edit-form-{{ message.id }}" style="display:none;">
+                                <form method="POST" action="{% url 'groups:edit_message' group.id message.id %}">
+                                    {% csrf_token %}
+                                    <input type="text" name="content" value="{{ message.content }}" required>
+                                    <button type="submit" class="btn-join">Зберегти ✅</button>
+                                </form>
+                                <form method="POST" action="{% url 'groups:delete_message' group.id message.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-leave">Видалити 🗑️</button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% empty %}
+                <p>Повідомлень поки немає 😅</p>
+            {% endfor %}
+        </div>
+
+        <!-- Відправка нового повідомлення -->
+        {% if user in group.members.all %}
+            <form method="POST" action="{% url 'groups:send_message' group.id %}" class="group-send-form">
+                {% csrf_token %}
+                <input type="text" name="content" placeholder="Введіть повідомлення..." required>
+                <button type="submit" class="btn-join">Надіслати</button>
+            </form>
+        {% endif %}
+    </div>
+
+    <!-- Кнопки дій -->
+    {% if user not in group.members.all %}
+        {% if group.require_approval %}
+            <form method="POST" action="{% url 'groups:request_join_group' group.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-join">Запросити вступ ✅</button>
+            </form>
+        {% else %}
+            <form method="POST" action="{% url 'groups:join_group' group.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-join">Приєднатися до групи ✅</button>
+            </form>
+        {% endif %}
+    {% else %}
+        <form method="POST" action="{% url 'groups:leave_group' group.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn-leave">Вийти з групи ❌</button>
+        </form>
+    {% endif %}
+
+    {% if user == group.creator %}
+        <form method="POST" action="{% url 'groups:delete_group' group.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn-remove">Видалити групу 🗑️</button>
+        </form>
+    {% endif %}
+</div>
+
+<script>
+function toggleEdit(messageId) {
+    const form = document.getElementById(`edit-form-${messageId}`);
+    form.style.display = form.style.display === "none" ? "block" : "none";
+}
+</script>
+{% endblock %}

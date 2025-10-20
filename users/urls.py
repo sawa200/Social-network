@@ -11,20 +11,27 @@ urlpatterns = [
         template_name="users/login.html",
         authentication_form=CustomAuthenticationForm
     ), name="login"),
-
     path("logout/", auth_views.LogoutView.as_view(next_page="/"), name="logout"),
     path("register/", views.register, name="register"),
 
     # Профили
-    path("profile/", views.profile, name="profile"),
-    path("profile/<int:user_id>/", views.user_profile, name="user_profile"),
-    path('profile/<int:user_id>/friends/', views.user_friends, name='user_friends'),
-    path("profile/<int:user_id>/friends/", views.user_friends, name="user_friends"),
-    path('profile/edit/', views.edit_profile, name='edit_profile'),
+    path("profile/", views.profile, name="profile"),  
+    path("profile/<int:user_id>/", views.user_profile, name="user_profile"),  
+    path("profile/edit/", views.edit_profile, name="edit_profile"),  
+    path("profile/<int:user_id>/friends/", views.user_friends, name="user_friends"),  
+
     # Друзья
     path("friends/", views.friends_list, name="friends_list"),
     path("friends/add/<int:user_id>/", views.add_friend, name="add_friend"),
     path("friends/accept/<int:request_id>/", views.accept_friend, name="accept_friend"),
-    path("friends/delete/<int:request_id>/", views.delete_friend_request, name="delete_friend_request"),
-    
+
+    path("friends/remove/<int:user_id>/", views.delete_friend, name="delete_friend"),
+    path("friends/request/delete/<int:request_id>/", views.delete_friend_request, name="delete_friend_request"),
+
+
+
+
+    # Подписки (новое)
+    path("subscribe/<int:user_id>/", views.subscribe, name="subscribe"),
+    path("unsubscribe/<int:user_id>/", views.unsubscribe, name="unsubscribe"),
 ]

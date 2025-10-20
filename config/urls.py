@@ -24,7 +24,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', feed_views.index, name='index'),   
     path('users/', include('users.urls')),      
-    path('feed/', include('feed.urls')),       
+    path('feed/', include('feed.urls')),
+    path("groups/", include("groups.urls")),
+    path("chat/", include("chat.urls")),    
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

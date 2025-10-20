@@ -1,0 +1,14 @@
+{% extends "feed/base.html" %}
+{% block content %}
+<h2>Группы</h2>
+
+<ul>
+  {% for group in groups %}
+    <li><a href="{% url 'groups:group_detail' group.id %}">{{ group.name }}</a></li>
+  {% empty %}
+    <li>Нет групп</li>
+  {% endfor %}
+</ul>
+
+<a href="{% url 'groups:create_group' %}" class="btn-create">Создать группу</a>
+{% endblock %}

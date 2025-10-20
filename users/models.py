@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.db import models
 from django.conf import settings
 
+
 # Модель для заявок в друзья
 class FriendRequest(models.Model):
     from_user = models.ForeignKey(
@@ -56,17 +57,25 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
         return self.create_user(email, password, **extra_fields)
 
-# Кастомная модель пользователя
-class CustomUser(AbstractBaseUser, PermissionsMixin): 
+
+class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     nickname = models.CharField(max_length=30, unique=True, blank=True, null=True)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
+    # Добавляем подписки/подписчиков
+    followers = models.ManyToManyField(
+        'self',
+        symmetrical=False,
+        related_name='following',
+        blank=True
+    )
+
     objects = CustomUserManager()
 
-    USERNAME_FIELD = 'nickname'  
+    USERNAME_FIELD = 'nickname'
     REQUIRED_FIELDS = ['email']
 
     def __str__(self):

@@ -1,10 +1,8 @@
 {% extends "feed/base.html" %}
-{% block title %}Лента друзей 👥{% endblock %}
+{% block title %}Стрічка друзів 👥{% endblock %}
 
 {% block content %}
-<h1>Лента друзей 👥✨</h1>
-
-
+<h1>Стрічка друзів 👥✨</h1>
 
 <div class="posts">
     {% for post in posts %}
@@ -16,7 +14,7 @@
 
             {% if post.image %}
                 <div class="post-media">
-                    <img src="{{ post.image.url }}" alt="Изображение" style="max-width:60%; border-radius:10px; margin-top:10px;">
+                    <img src="{{ post.image.url }}" alt="Зображення" style="max-width:60%; border-radius:10px; margin-top:10px;">
                 </div>
             {% endif %}
 
@@ -24,7 +22,7 @@
                 <div class="post-media" style="margin-top:10px;">
                     <video width="80%" height="400" controls>
                         <source src="{{ post.video.url }}" type="video/mp4">
-                        Ваш браузер не поддерживает видео.
+                        Ваш браузер не підтримує відтворення відео.
                     </video>
                 </div>
             {% endif %}
@@ -41,58 +39,59 @@
                     {% csrf_token %}
                     <button type="submit" class="btn-like" id="like-btn-{{ post.id }}">
                         {% if user in post.likes.all %}
-                            <i class="fa-solid fa-thumbs-up" style="color:#2b02f7;"></i>
+                            <i class="fa-solid fa-heart" style="color:#ff3b3b;"></i>
                         {% else %}
-                            <i class="fa-regular fa-thumbs-up" style="color:#888;"></i>
+                            <i class="fa-regular fa-heart" style="color:#666;"></i>
                         {% endif %}
                     </button>
                 </form>
                 <span id="like-count-{{ post.id }}">{{ post.likes.count }}</span>
 
-                <a href="{% url 'feed:post_detail' post.id %}" class="btn" style="margin-left: 15px;">
-                    <i class="fa-solid fa-comment"></i> {{ post.comments.count }}
-                </a>
+                    <a href="{% url 'feed:post_detail' post.id %}" class="btn-comment">
+                        <i class="fa-regular fa-comment"></i>
+                        <span class="comment-count">{{ post.comments.count }}</span>
+                    </a>
             </div>
         </div>
     {% empty %}
-        <p>Нет постов от друзей 😢</p>
+        <p>Немає дописів від друзів 😢</p>
     {% endfor %}
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const likeForms = document.querySelectorAll('.like-form');
-
-    likeForms.forEach(form => {
-        form.addEventListener('submit', function(e) {
+    document.querySelectorAll('.like-form').forEach(form => {
+        form.addEventListener('submit', async function(e) {
             e.preventDefault();
             const postId = this.dataset.postId;
             const url = this.action;
             const csrfToken = this.querySelector('[name=csrfmiddlewaretoken]').value;
 
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': csrfToken,
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                const data = await response.json();
                 const countSpan = document.getElementById(`like-count-${postId}`);
                 countSpan.textContent = data.total_likes;
 
-                const icon = this.querySelector('button i');
-                if(data.liked){
+                const icon = this.querySelector('i');
+                if (data.liked) {
                     icon.classList.remove('fa-regular');
                     icon.classList.add('fa-solid');
-                    icon.style.color = '#2b02f7';
+                    icon.style.color = '#ff3b3b';
                 } else {
                     icon.classList.remove('fa-solid');
                     icon.classList.add('fa-regular');
-                    icon.style.color = '#888';
+                    icon.style.color = '#666';
                 }
-            });
+            } catch (err) {
+                console.error('Помилка при лайку:', err);
+            }
         });
     });
 });

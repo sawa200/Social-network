@@ -1,0 +1,10 @@
+<h2>Мои группы 👥</h2>
+<ul>
+    {% for group in groups %}
+        <li>
+            <a href="{% url 'groups:group_detail' group.id %}">{{ group.name }}</a>
+        </li>
+    {% empty %}
+        <li>Вы не состоите ни в одной группе 😢</li>
+    {% endfor %}
+</ul>

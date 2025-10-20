@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+from django.utils.translation import gettext_lazy as _
 from pathlib import Path
 
 import os
@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'chat',
     'feed',
     'widget_tweaks',
+    'events',
+    'groups',   
 ]
 
 MIDDLEWARE = [
@@ -55,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -84,6 +87,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        'OPTIONS': {
+            'timeout': 20, 
+        }
     }
 }
 
@@ -135,6 +141,17 @@ AUTH_USER_MODEL = 'users.CustomUser'
 LOGIN_REDIRECT_URL = '/'        
 LOGOUT_REDIRECT_URL = '/' 
 
+
+LANGUAGES = [
+    ('uk', _('Українська')),
+    ('ru', _('Русский')),
+    ('en', _('English')),
+]
+
+
+LANGUAGE_CODE = 'uk'
+
+USE_L10N = True
 
 
 MEDIA_URL = '/media/'

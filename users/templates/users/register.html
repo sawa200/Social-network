@@ -1,8 +1,7 @@
-
 {% extends "feed/base.html" %}
 
 {% load widget_tweaks %}
-{% block title %}Регистрация 👤{% endblock %}
+{% block title %}Реєстрація 👤{% endblock %}
 
 {% block content %}
 <div class="auth-box" style="
@@ -13,12 +12,12 @@
     border-radius: 15px; 
     box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 ">
-    <h2 style="text-align:center; margin-bottom: 25px;">Регистрация 👤</h2>
+    <h2 style="text-align:center; margin-bottom: 25px;">Реєстрація 👤</h2>
     <form method="POST" style="display: flex; flex-direction: column;">
         {% csrf_token %}
         {{ form.non_field_errors }}
 
-        <label for="{{ form.nickname.id_for_label }}" style="margin-bottom:5px;">🌟 Никнейм</label>
+        <label for="{{ form.nickname.id_for_label }}" style="margin-bottom:5px;">🌟 Нікнейм</label>
         {{ form.nickname }}
 
         <label for="{{ form.email.id_for_label }}" style="margin-bottom:5px;">📧 Email</label>
@@ -39,14 +38,15 @@
             border-radius: 10px;
             cursor: pointer;
             font-size: 16px;
-        ">Зарегистрироваться 🚀</button>
+        ">Зареєструватися 🚀</button>
     </form>
+    
     <a href="{% url 'users:login' %}" style="
         display: block; 
         text-align:center; 
         margin-top: 15px; 
         color: #2575fc;
         text-decoration: none;
-    ">Уже есть аккаунт? Войти 🔑</a>
+    ">Вже є акаунт? Увійти 🔑</a>
 </div>
 {% endblock %}

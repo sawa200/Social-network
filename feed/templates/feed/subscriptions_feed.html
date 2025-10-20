@@ -1,0 +1,53 @@
+{% extends "feed/base.html" %}
+{% block title %}Стрічка підписок{% endblock %}
+
+{% block content %}
+<div class="feed-container">
+    <h2>Пости від користувачів, на яких ви підписані</h2>
+
+    {% if posts %}
+        {% for post in posts %}
+            <div class="post-card">
+                <div class="post-header">
+                    <a href="{% url 'users:user_profile' post.author.id %}">
+                        <strong>{{ post.author.nickname|default:post.author.email }}</strong>
+                    </a>
+                    <span class="post-date">{{ post.created_at|date:"d.m.Y H:i" }}</span>
+                </div>
+
+                <div class="post">
+                    <h4>{{ post.title }}</h4>
+                    <p>{{ post.content|linebreaks }}</p>
+
+                    {% if post.image %}
+                        <div class="post-media">
+                            <img src="{{ post.image.url }}" alt="Зображення посту">
+                        </div>
+                    {% endif %}
+
+                    {% if post.video %}
+                        <div class="post-media">
+                            <video controls>
+                                <source src="{{ post.video.url }}" type="video/mp4">
+                                Ваш браузер не підтримує відео.
+                            </video>
+                        </div>
+                    {% endif %}
+
+                    {% if post.youtube_link %}
+                        <div class="post-media">
+                            <iframe 
+                                src="https://www.youtube.com/embed/{{ post.youtube_link|slice:'-11:' }}" 
+                                frameborder="0"
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Поки що немає постів від ваших підписок 😅</p>
+    {% endif %}
+</div>
+{% endblock %}

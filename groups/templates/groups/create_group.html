@@ -1,0 +1,12 @@
+{% extends "feed/base.html" %}
+{% block content %}
+<h2>Создать группу</h2>
+<form method="post">
+  {% csrf_token %}
+  <input type="text" name="name" placeholder="Название группы" required>
+  <button type="submit">Создать</button>
+</form>
+
+
+<a href="{% url 'groups:group_list' %}">⬅ Назад к списку</a>
+{% endblock %}

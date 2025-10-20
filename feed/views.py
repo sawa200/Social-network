@@ -1,13 +1,37 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from .models import Post, Comment
+from .models import Post 
 from .forms import CommentForm, PostForm
 from users.models import Friendship 
+from users.models import CustomUser
+from django.db.models import Count 
+from events.models import Event
+from groups.models import Group
+
 
 def index(request):
-    posts = Post.objects.all().order_by("-created_at")
-    return render(request, "feed/index.html", {"posts": posts})
+    posts = Post.objects.all() \
+        .select_related('author') \
+        .prefetch_related('likes', 'comments') \
+        .order_by('-created_at')  
+
+    popular_users = CustomUser.objects.annotate(
+        total_likes=Count('post__likes')
+    ).order_by('-total_likes')[:5]  # топ 5
+
+    popular_groups = Group.objects.annotate(
+        member_count=Count('members')
+    ).order_by('-member_count')[:5]
+
+    upcoming_events = Event.objects.order_by('date')[:5]
+
+    return render(request, "feed/index.html", {
+        "posts": posts,
+        "popular_users": popular_users,
+        "popular_groups": popular_groups,
+        "upcoming_events": upcoming_events,
+    })
 
 
 def post_detail(request, post_id):
@@ -88,3 +112,15 @@ def friends_feed(request):
     posts = Post.objects.filter(author__id__in=friends_ids).order_by("-created_at")
 
     return render(request, "feed/friends_feed.html", {"posts": posts})
+
+@login_required
+def subscriptions_feed(request):
+    """
+    Лента постов от пользователей, на которых подписан текущий пользователь.
+    """
+    following_users = request.user.following.all()
+    posts = Post.objects.filter(author__in=following_users).order_by('-created_at')
+
+    return render(request, "feed/subscriptions_feed.html", {
+        "posts": posts
+    })

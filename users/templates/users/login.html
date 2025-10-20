@@ -1,23 +1,32 @@
-
 {% extends "feed/base.html" %}
 {% load widget_tweaks %}
+
 {% block title %}Вход 🔑{% endblock %}
 
 {% block content %}
-<div class="auth-box">
-    <h2>Вход 🔑</h2>
+<div class="login-container">
+    <h2>Вход в аккаунт 🔑</h2>
+
     <form method="POST">
         {% csrf_token %}
         {{ form.non_field_errors }}
 
-        {{ form.username.label_tag }}
-        {{ form.username }}
+        <div class="form-group">
+            <label for="{{ form.username.id_for_label }}">Логин</label>
+            {{ form.username|add_class:"form-control" }}
+        </div>
 
-        {{ form.password.label_tag }}
-        {{ form.password }}
+        <div class="form-group">
+            <label for="{{ form.password.id_for_label }}">Пароль</label>
+            {{ form.password|add_class:"form-control" }}
+        </div>
 
-        <button type="submit">Войти 🚀</button>
+        <button type="submit" class="btn">Войти 🚀</button>
     </form>
-    <a href="{% url 'users:register' %}" class="login-link">Нет аккаунта? Зарегистрироваться 👤</a>
+
+    <p class="register-link">
+        Нет аккаунта? 
+        <a href="{% url 'users:register' %}">Зарегистрироваться 👤</a>
+    </p>
 </div>
 {% endblock %}

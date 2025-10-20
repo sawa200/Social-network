@@ -1,59 +1,73 @@
 {% extends "feed/base.html" %}
 
+{% block title %}Мої друзі{% endblock %}
+
 {% block content %}
-<h2>👥 Мои друзья</h2>
+<h2>👥 Мої друзі</h2>
 
 {% if friends %}
     <ul>
         {% for friend in friends %}
             <li>
                 {{ friend.nickname|default:friend.email }}
+                
+                <!-- Кнопка видалення друга -->
+                <form method="post" action="{% url 'users:delete_friend' friend.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">🗑️ Видалити друга</button>
+                </form>
             </li>
         {% endfor %}
     </ul>
 {% else %}
-    <p>У тебя пока нет друзей 😢</p>
+    <p>У вас поки що немає друзів 😢</p>
 {% endif %}
 
 <hr>
 
-<h3>📩 Входящие заявки</h3>
+<h3>📩 Вхідні заявки</h3>
 {% if incoming_requests %}
     <ul>
         {% for req in incoming_requests %}
             <li>
                 {{ req.from_user.nickname|default:req.from_user.email }}
+                
+                <!-- Прийняти заявку -->
                 <form method="post" action="{% url 'users:accept_friend' req.id %}" style="display:inline;">
                     {% csrf_token %}
-                    <button type="submit">✅ Принять</button>
+                    <button type="submit">✅ Прийняти</button>
                 </form>
+                
+                <!-- Відхилити заявку -->
                 <form method="post" action="{% url 'users:delete_friend_request' req.id %}" style="display:inline;">
                     {% csrf_token %}
-                    <button type="submit">❌ Отклонить</button>
+                    <button type="submit">❌ Відхилити</button>
                 </form>
             </li>
         {% endfor %}
     </ul>
 {% else %}
-    <p>Нет входящих заявок</p>
+    <p>Немає вхідних заявок</p>
 {% endif %}
 
 <hr>
 
-<h3>📤 Исходящие заявки</h3>
+<h3>📤 Вихідні заявки</h3>
 {% if outgoing_requests %}
     <ul>
         {% for req in outgoing_requests %}
             <li>
                 {{ req.to_user.nickname|default:req.to_user.email }}
+                
+                <!-- Скасувати вихідну заявку -->
                 <form method="post" action="{% url 'users:delete_friend_request' req.id %}" style="display:inline;">
                     {% csrf_token %}
-                    <button type="submit">🚫 Отменить</button>
+                    <button type="submit">🚫 Скасувати</button>
                 </form>
             </li>
         {% endfor %}
     </ul>
 {% else %}
-    <p>Нет исходящих заявок</p>
+    <p>Немає вихідних заявок</p>
 {% endif %}
 {% endblock %}

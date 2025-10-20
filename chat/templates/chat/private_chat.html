@@ -1,0 +1,34 @@
+{% extends "feed/base.html" %}
+{% block title %}Чат з {{ other_user.nickname|default:other_user.email }}{% endblock %}
+
+{% block content %}
+<div class="private-chat-container">
+    <h2>💬 Чат з {{ other_user.nickname|default:other_user.email }}</h2>
+
+    <div class="messages">
+        {% for msg in messages %}
+            <div class="message-row {% if msg.sender == request.user %}sent{% else %}received{% endif %}">
+                {% if msg.sender != request.user %}
+                    <img src="{{ msg.sender.avatar.url|default:'/static/default_avatar.png' }}" class="avatar" alt="аватар">
+                {% endif %}
+                <div class="message-content">
+                    <span class="nickname">{{ msg.sender.nickname|default:msg.sender.email }}</span>
+                    <span class="text">{{ msg.content }}</span>
+                    <span class="time">{{ msg.created_at|date:"H:i d.m.Y" }}</span>
+                </div>
+                {% if msg.sender == request.user %}
+                    <img src="{{ msg.sender.avatar.url|default:'/static/default_avatar.png' }}" class="avatar" alt="аватар">
+                {% endif %}
+            </div>
+        {% empty %}
+            <p>Повідомлень поки що немає 😅</p>
+        {% endfor %}
+    </div>
+
+    <form method="POST" class="send-form">
+        {% csrf_token %}
+        <textarea name="content" placeholder="Напишіть повідомлення..." required></textarea>
+        <button type="submit">Відправити</button>
+    </form>
+</div>
+{% endblock %}

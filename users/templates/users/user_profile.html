@@ -1,55 +1,99 @@
 {% extends "feed/base.html" %}
-{% block title %}Профиль пользователя{% endblock %}
+{% load static %}
+
+{% block title %}Профіль {{ profile_user.nickname|default:profile_user.email }}{% endblock %}
 
 {% block content %}
-<h1>{{ profile_user.nickname|default:profile_user.email }}</h1>
+<div class="profile-box">
+    <h2>{{ profile_user.nickname|default:profile_user.email }} 👤</h2>
 
-{% if request.user != profile_user %}
-<form method="post" action="{% url 'users:add_friend' profile_user.id %}" style="margin-bottom:20px;">
-    {% csrf_token %}
-    <button type="submit" class="btn" style="padding:10px 20px; font-size:16px;">
-        ➕ Добавить в друзья
-    </button>
-</form>
-{% endif %}
+    {% if profile_user.avatar %}
+        <img src="{{ profile_user.avatar.url }}" alt="Аватар" class="avatar">
+    {% else %}
+        <img src="{% static 'default_avatar.png' %}" alt="Аватар" class="avatar">
+    {% endif %}
 
-<div class="profile-stats" style="display:flex; gap:40px; margin-bottom:20px;">
+    <p>📧 Email: {{ profile_user.email }}</p>
 
-    
+    {% if profile_user.bio %}
+        <p>💬 {{ profile_user.bio }}</p>
+    {% endif %}
+
+    <!-- Особистий чат -->
+    {% if request.user != profile_user %}
+        <a href="{% url 'chat:private_chat' profile_user.nickname %}" class="btn">💬 Написати повідомлення</a>
+    {% endif %}
+
+    <!-- Кнопки підписки -->
+    {% if request.user != profile_user %}
+        {% if request.user in profile_user.followers.all %}
+            <a href="{% url 'users:unsubscribe' profile_user.id %}" class="btn-subscribe">➖ Відписатися</a>
+        {% else %}
+            <a href="{% url 'users:subscribe' profile_user.id %}" class="btn-subscribe">➕ Підписатися</a>
+        {% endif %}
+    {% endif %}
+
+    <hr>
+
+    <!-- Статистика користувача -->
+    <div class="profile-stats-wrapper">
         <div class="profile-stats">
             <a href="{% url 'users:user_friends' profile_user.id %}" class="stat-item">
-                👥 {{ total_friends }} друзей
+                👥 {{ total_friends }} друзів
             </a>
-            <div class="stat-item">📝 {{ total_posts }} постов</div>
-            <div class="stat-item">❤️ {{ total_likes }} лайков</div>
+            <div class="stat-item">🧑‍🤝‍🧑 {{ total_followers }} підписників</div>
+            <div class="stat-item">➡️ {{ total_following }} підписок</div>
+            <div class="stat-item">📝 {{ total_posts }} постів</div>
+            <div class="stat-item">❤️ {{ total_likes }} лайків</div>
         </div>
+    </div>
 
+    <!-- Кнопка додавання в друзі -->
+    {% if request.user != profile_user %}
+        <a href="{% url 'users:add_friend' profile_user.id %}" class="btn-add-friend">➕ Додати в друзі</a>
+    {% endif %}
 
+    <hr>
 
+    <!-- Пости користувача -->
+    <div class="posts">
+        <h3>Пости {{ profile_user.nickname|default:profile_user.email }} 📰</h3>
+
+        {% if profile_user.post_set.exists %}
+            {% for post in profile_user.post_set.all %}
+                <div class="post">
+                    <h4>{{ post.title }}</h4>
+                    <p>{{ post.content|linebreaks }}</p>
+
+                    {% if post.image %}
+                        <div class="post-media">
+                            <img src="{{ post.image.url }}" alt="Зображення посту">
+                        </div>
+                    {% endif %}
+
+                    {% if post.video %}
+                        <div class="post-media">
+                            <video controls>
+                                <source src="{{ post.video.url }}" type="video/mp4">
+                                Ваш браузер не підтримує відео.
+                            </video>
+                        </div>
+                    {% endif %}
+
+                    {% if post.youtube_link %}
+                        <div class="post-media">
+                            <iframe 
+                                src="https://www.youtube.com/embed/{{ post.youtube_link|slice:'-11:' }}" 
+                                frameborder="0"
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Постів поки немає 😔</p>
+        {% endif %}
+    </div>
 </div>
-
-<div class="posts">
-    {% for post in profile_user.post_set.all %}
-        <div class="post">
-            <h3>{{ post.title }}</h3>
-            <p>{{ post.content }}</p>
-
-            {% if post.image %}
-                <img src="{{ post.image.url }}" alt="Фото" style="max-width:80%; border-radius:10px; margin-top:10px;">
-            {% endif %}
-
-            {% if post.video %}
-                <video width="80%" height="auto" controls style="border-radius:10px; margin-top:10px;">
-                    <source src="{{ post.video.url }}" type="video/mp4">
-                    Ваш браузер не поддерживает видео.
-                </video>
-            {% endif %}
-        </div>
-    {% empty %}
-        <p>У пользователя пока нет постов 😢</p>
-    {% endfor %}
-</div>
-
-<a href="{% url 'users:profile' %}" class="btn" style="margin-top:20px;">⬅ Назад к моему профилю</a>
-
 {% endblock %}
