@@ -1,0 +1,15 @@
+{% extends "feed/base.html" %}
+{% block title %}Запросити учасника{% endblock %}
+
+{% block content %}
+<h2>Запросити користувача до групи "{{ group.name }}"</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <label for="username">Ім’я користувача:</label>
+    <input type="text" id="username" name="username" required>
+    <button type="submit">Запросити</button>
+</form>
+
+<a href="{% url 'groups:group_detail' group.id %}">⬅️ Назад</a>
+{% endblock %}

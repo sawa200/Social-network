@@ -44,4 +44,4 @@ class GroupJoinRequest(models.Model):
         unique_together = ('group', 'user')
 
     def __str__(self):
-        return f"{self.user.username} → {self.group.name}"
+        return f"{self.user.nickname} → {self.group.name}"

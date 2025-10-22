@@ -50,6 +50,21 @@
                 {% if post.image %}
                     <img src="{{ post.image.url }}" alt="Изображение поста" class="post-image">
                 {% endif %}
+                {% if post.video %}
+                    <div class="post-media">
+                        <video controls>
+                            <source src="{{ post.video.url }}" type="video/mp4">
+                        </video>
+                    </div>
+                {% endif %}
+
+                {% if post.youtube_url %}
+                    <div class="post-media">
+                        <iframe src="https://www.youtube.com/embed/{{ post.youtube_url|cut:'https://www.youtube.com/watch?v=' }}" 
+                            frameborder="0" allowfullscreen></iframe>
+                    </div>
+                {% endif %}
+
                 <p>👍 Лайков: {{ post.likes.count }}</p>
             </div>
         {% endfor %}

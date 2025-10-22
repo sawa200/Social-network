@@ -8,6 +8,14 @@
     <p>Створив: {{ group.creator.nickname|default:group.creator.email }}</p>
     <p>Дата створення: {{ group.created_at|date:"d.m.Y H:i" }}</p>
 
+    <!-- 🔹 Панель керування групою -->
+    {% if user == group.creator or user in group.admins.all %}
+    <div class="group-actions">
+        <a href="{% url 'groups:invite_to_group' group.id %}" class="btn btn-invite">➕ Запросити учасника</a>
+        <a href="{% url 'groups:my_groups' %}" class="btn btn-my-groups">📂 Мої групи</a>
+    </div>
+    {% endif %}
+
     <!-- 🧑‍🤝‍🧑 Учасники -->
     <div class="group-members">
         <h3>Учасники 👥</h3>
@@ -33,7 +41,6 @@
                                 <button type="submit" class="btn-join">Призначити адміном ⭐</button>
                             </form>
                         {% endif %}
-
                         <form method="POST" action="{% url 'groups:remove_member' group.id member.id %}" style="display:inline;">
                             {% csrf_token %}
                             <button type="submit" class="btn-leave">Видалити ❌</button>
@@ -113,7 +120,7 @@
         {% if group.require_approval %}
             <form method="POST" action="{% url 'groups:request_join_group' group.id %}">
                 {% csrf_token %}
-                <button type="submit" class="btn-join">Запросити вступ ✅</button>
+                <button type="submit" class="btn-join">Надіслати запит ✅</button>
             </form>
         {% else %}
             <form method="POST" action="{% url 'groups:join_group' group.id %}">
@@ -141,5 +148,30 @@ function toggleEdit(messageId) {
     const form = document.getElementById(`edit-form-${messageId}`);
     form.style.display = form.style.display === "none" ? "block" : "none";
 }
+
+let lastCheck = new Date().toISOString();
+
+function checkNewMessages() {
+    fetch("{% url 'groups:check_new_messages' group.id %}?last_check=" + lastCheck)
+        .then(response => response.json())
+        .then(data => {
+            if (data.has_new) {
+                showNotification(data.count);
+            }
+            lastCheck = new Date().toISOString();
+        })
+        .catch(err => console.error("Помилка перевірки нових повідомлень:", err));
+}
+
+function showNotification(count) {
+    const notif = document.createElement("div");
+    notif.className = "new-message-alert";
+    notif.textContent = `💬 Нові повідомлення (${count})`;
+    document.body.appendChild(notif);
+    setTimeout(() => notif.remove(), 4000);
+}
+
+// Перевірка кожні 5 секунд
+setInterval(checkNewMessages, 5000);
 </script>
 {% endblock %}

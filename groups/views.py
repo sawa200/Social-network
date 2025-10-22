@@ -2,6 +2,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Group, GroupMessage, GroupJoinRequest
 from users.models import CustomUser
+from django.http import JsonResponse
+from django.utils import timezone
+from django.contrib import messages
 
 # 🔹 Список всех групп
 @login_required
@@ -19,7 +22,6 @@ def group_detail(request, group_id):
     is_admin = request.user in group.admins.all()
     user_can_manage = is_creator or is_admin
 
-    # Заявки на вступление, которые ещё не одобрены
     pending_requests = group.join_requests.filter(approved=False)
 
     return render(request, 'groups/group_detail.html', {
@@ -28,9 +30,8 @@ def group_detail(request, group_id):
         'is_creator': is_creator,
         'is_admin': is_admin,
         'user_can_manage': user_can_manage,
-        'pending_requests': pending_requests,  # передаём в шаблон
+        'pending_requests': pending_requests,
     })
-
 
 # 🔹 Создание новой группы
 @login_required
@@ -58,7 +59,7 @@ def leave_group(request, group_id):
         group.members.remove(request.user)
     return redirect("groups:group_detail", group_id=group.id)
 
-# 🔹 Удаление пользователя из группы (только админ/создатель)
+# 🔹 Удаление пользователя из группы
 @login_required
 def remove_member(request, group_id, member_id):
     group = get_object_or_404(Group, id=group_id)
@@ -68,7 +69,7 @@ def remove_member(request, group_id, member_id):
             group.members.remove(member)
     return redirect("groups:group_detail", group_id=group.id)
 
-# 🔹 Назначение админа (только создатель)
+# 🔹 Назначение админа
 @login_required
 def add_admin(request, group_id, member_id):
     group = get_object_or_404(Group, id=group_id)
@@ -77,7 +78,7 @@ def add_admin(request, group_id, member_id):
         group.admins.add(member)
     return redirect("groups:group_detail", group_id=group.id)
 
-# 🔹 Удаление админа (только создатель)
+# 🔹 Удаление админа
 @login_required
 def remove_admin(request, group_id, member_id):
     group = get_object_or_404(Group, id=group_id)
@@ -86,7 +87,7 @@ def remove_admin(request, group_id, member_id):
         group.admins.remove(member)
     return redirect("groups:group_detail", group_id=group.id)
 
-# 🔹 Удаление группы (только создатель)
+# 🔹 Удаление группы
 @login_required
 def delete_group(request, group_id):
     group = get_object_or_404(Group, id=group_id)
@@ -101,11 +102,7 @@ def send_message(request, group_id):
     if request.method == "POST":
         content = request.POST.get("content")
         if content:
-            GroupMessage.objects.create(
-                group=group,
-                author=request.user,
-                content=content
-            )
+            GroupMessage.objects.create(group=group, author=request.user, content=content)
     return redirect("groups:group_detail", group_id=group.id)
 
 # 🔹 Редактирование сообщения
@@ -130,7 +127,7 @@ def delete_message(request, group_id, message_id):
     group = message.group
     if request.user == message.author or request.user == group.creator or request.user in group.admins.all():
         message.delete()
-    return redirect("groups:group_detail", group_id=group_id)
+    return redirect("groups:group_detail", group_id=group.id)
 
 # 🔹 Создание заявки на вступление
 @login_required
@@ -150,3 +147,44 @@ def approve_join_request(request, request_id):
         join_request.save()
         group.members.add(join_request.user)
     return redirect("groups:group_detail", group_id=group.id)
+
+# 🔹 Проверка новых сообщений
+def check_new_messages(request, group_id):
+    group = get_object_or_404(Group, id=group_id)
+    last_check = request.GET.get("last_check")
+    if last_check:
+        try:
+            last_check = timezone.datetime.fromisoformat(last_check)
+        except ValueError:
+            last_check = timezone.now() - timezone.timedelta(seconds=10)
+    else:
+        last_check = timezone.now() - timezone.timedelta(seconds=10)
+
+    new_messages = group.messages.filter(created_at__gt=last_check).exclude(author=request.user)
+    return JsonResponse({"has_new": new_messages.exists(), "count": new_messages.count()})
+
+# 🔹 Мои группы
+@login_required
+def my_groups(request):
+    groups = Group.objects.filter(creator=request.user)
+    return render(request, 'groups/my_groups.html', {'groups': groups})
+
+# 🔹 Приглашение в группу
+@login_required
+def invite_to_group(request, group_id):
+    group = get_object_or_404(Group, id=group_id)
+
+    if request.user != group.creator and request.user not in group.admins.all():
+        return redirect('groups:group_detail', group_id=group.id)
+
+    if request.method == 'POST':
+        nickname = request.POST.get('nickname')
+        try:
+            user = CustomUser.objects.get(nickname=nickname)
+            group.members.add(user)
+        except CustomUser.DoesNotExist:
+            messages.error(request, "Користувача з таким нікнеймом не знайдено.")
+        return redirect('groups:group_detail', group_id=group.id)
+
+    return render(request, 'groups/invite_to_group.html', {'group': group})
+

@@ -1,49 +1,120 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Соцсеть{% endblock %}</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>{% block title %}NovaNet 🌐{% endblock %}</title>
 
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
+<body class="bg-light">
 
-<body>
-    <header>
-        <h1> NovaNet 🌐</h1>
-        <nav>
-            <a href="{% url 'index' %}">Главная</a>
-            {% if user.is_authenticated %}
-            <a href="{% url 'users:friends_list' %}">👥 Мої друзі</a>
-            <a href="{% url 'feed:friends_feed' %}">Лента друзей 👥</a>
-            <a href="{% url 'feed:subscriptions_feed' %}">🧡 Подписки</a>
-                <a href="{% url 'users:profile' %}">Профиль</a>
-                <form method="POST" action="{% url 'users:logout' %}" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit">Выйти 🚪</button>
-                </form>
-            {% else %}
-                <a href="{% url 'users:login' %}">Вход</a>
-                <a href="{% url 'users:register' %}">Регистрация</a>
-            {% endif %}
+<!-- 🔹 Навбар -->
+<nav class="navbar navbar-light bg-white shadow-sm fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="{% url 'index' %}">🌐 NovaNet</a>
 
+    <!-- Кнопка меню -->
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-        </nav>
-        <hr>
-    </header>
+    <!-- Offcanvas меню -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Меню</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Закрити"></button>
+      </div>
+      <div class="offcanvas-body">
+        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'index' %}"><i class="fa-solid fa-house"></i> Головна</a>
+          </li>
 
-    <main>
-        {% block content %}{% endblock %}
-    </main>
-    {% if messages %}
-    <div class="messages">
-        {% for message in messages %}
-            <p style="color: green;">{{ message }}</p>
-        {% endfor %}
+          {% if user.is_authenticated %}
+          <li><a class="nav-link" href="{% url 'users:friends_list' %}">👥 Мої друзі</a></li>
+          <li><a class="nav-link" href="{% url 'feed:friends_feed' %}">📜 Стрічка друзів</a></li>
+          <li><a class="nav-link" href="{% url 'feed:subscriptions_feed' %}">🧡 Підписки</a></li>
+          <li><a class="nav-link" href="{% url 'groups:group_list' %}">🌍 Усі групи</a></li>
+          <li><a class="nav-link" href="{% url 'groups:my_groups' %}">⭐ Мої групи</a></li>
+
+          {% if user.is_superuser %}
+          <li><a class="nav-link text-danger fw-bold" href="/admin/">⚙️ Адмін-панель</a></li>
+          {% endif %}
+
+          <!-- Переключатель темы -->
+          <li class="nav-item mt-2">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="theme-toggle">
+              <label class="form-check-label" for="theme-toggle">Нічний режим</label>
+            </div>
+          </li>
+
+          <li class="nav-item mt-3">
+            <form method="POST" action="{% url 'users:logout' %}">
+              {% csrf_token %}
+              <button class="btn btn-outline-danger w-100">🚪 Вийти</button>
+            </form>
+          </li>
+
+          {% else %}
+          <li><a class="nav-link" href="{% url 'users:login' %}">🔑 Вхід</a></li>
+          <li><a class="nav-link" href="{% url 'users:register' %}">📝 Реєстрація</a></li>
+          {% endif %}
+        </ul>
+      </div>
     </div>
+  </div>
+</nav>
+
+<!-- Основний контент -->
+<main class="container mt-5 pt-5">
+  {% block content %}{% endblock %}
+</main>
+
+
+
+
+<!-- Повідомлення -->
+{% if messages %}
+<div class="container mt-3">
+  {% for message in messages %}
+    <div class="alert alert-success">{{ message }}</div>
+  {% endfor %}
+</div>
 {% endif %}
+
+<!-- Скрипт переключения темы -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleSwitch = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    // Проверка сохраненной темы
+    if (localStorage.getItem('theme') === 'dark') {
+        body.classList.add('dark-mode');
+        toggleSwitch.checked = true;
+    }
+
+    toggleSwitch.addEventListener('change', () => {
+        if (toggleSwitch.checked) {
+            body.classList.add('dark-mode');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            body.classList.remove('dark-mode');
+            localStorage.setItem('theme', 'light');
+        }
+    });
+});
+</script>
+
 </body>
 </html>

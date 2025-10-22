@@ -1,0 +1,10 @@
+{% extends "feed/base.html" %}
+{% block title %}{% if action == 'create' %}Створити подію{% else %}Редагувати подію{% endif %}{% endblock %}
+{% block content %}
+<h1>{% if action == 'create' %}Створити подію{% else %}Редагувати подію{% endif %}</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn">{% if action == 'create' %}Створити{% else %}Зберегти{% endif %}</button>
+</form>
+{% endblock %}

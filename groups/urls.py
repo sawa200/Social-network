@@ -8,7 +8,9 @@ urlpatterns = [
     path("", views.group_list, name="group_list"),
     path("create/", views.create_group, name="create_group"),
     path("<int:group_id>/", views.group_detail, name="group_detail"),
-
+    path("check_new_messages/<int:group_id>/", views.check_new_messages, name="check_new_messages"),
+    path('my/', views.my_groups, name='my_groups'),
+    path('<int:group_id>/invite/', views.invite_to_group, name='invite_to_group'),
     # 🔹 Участие
     path("<int:group_id>/join/", views.join_group, name="join_group"),
     path("<int:group_id>/leave/", views.leave_group, name="leave_group"),

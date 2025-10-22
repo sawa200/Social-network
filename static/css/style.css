@@ -1,19 +1,24 @@
-/* ================= Основные стили ================= */
+/* =====================================================
+   🌐 ОСНОВНЫЕ СТИЛИ
+===================================================== */
 body {
     font-family: Arial, sans-serif;
-    background: #f0f2f5;
+    background: #ffffff;
     margin: 0;
     padding: 0;
     color: #333;
 }
 
-/* ================ Хедер ================= */
+/* =====================================================
+   🔷 ХЕДЕР И НАВИГАЦИЯ
+===================================================== */
 header {
     background-color: #2575fc;
     color: white;
     padding: 15px 20px;
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 header h1 {
@@ -25,7 +30,8 @@ nav {
     margin-left: 20px;
 }
 
-nav a, nav button {
+nav a,
+nav button {
     color: white;
     text-decoration: none;
     margin-right: 10px;
@@ -36,11 +42,84 @@ nav a, nav button {
     transition: 0.3s;
 }
 
-nav a:hover, nav button:hover {
+nav a:hover,
+nav button:hover {
     text-decoration: underline;
 }
+/* === Тумблер === */
+.toggle-switch {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px auto;
+}
 
-/* ================ Контейнер ================= */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #303030;
+  transition: 0.4s;
+  border-radius: 26px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: rgb(143, 143, 143);
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #007bff;
+}
+
+input:checked + .slider:before {
+  transform: translateX(24px);
+}
+
+/* === Тёмный режим === */
+.dark-mode {
+  background-color: #121212 !important;
+  color: #99007f !important;
+}
+
+.dark-mode .navbar,
+.dark-mode .offcanvas,
+.dark-mode .card,
+.dark-mode .alert {
+  background-color: #4e4e4e !important;
+  color: #8900c9 !important;
+}
+
+.dark-mode a {
+  color: #b700ff !important;
+}
+
+/* =====================================================
+   📦 ОСНОВНОЙ КОНТЕЙНЕР
+===================================================== */
 .container {
     display: flex;
     gap: 20px;
@@ -48,13 +127,17 @@ nav a:hover, nav button:hover {
     flex-wrap: wrap;
 }
 
-/* ================ Основная лента ================= */
+/* =====================================================
+   📰 ЛЕНТА ПОСТОВ
+===================================================== */
 .feed {
     flex: 1;
     max-width: 800px;
 }
 
-/* ================ Посты ================= */
+/* =====================================================
+   📝 ПОСТЫ
+===================================================== */
 .post {
     background: #fff;
     padding: 20px;
@@ -67,7 +150,7 @@ nav a:hover, nav button:hover {
     margin-top: 0;
 }
 
-/* ================ Аватар и автор ================= */
+/* Автор поста */
 .post-author-info {
     display: flex;
     align-items: center;
@@ -75,9 +158,10 @@ nav a:hover, nav button:hover {
     margin-bottom: 10px;
 }
 
-.avatar, .author-avatar {
-    width: 100px;
-    height: 100px;
+.avatar,
+.author-avatar {
+    width: 80px;
+    height: 80px;
     object-fit: cover;
     border-radius: 50%;
     flex-shrink: 0;
@@ -95,8 +179,12 @@ nav a:hover, nav button:hover {
     text-decoration: underline;
 }
 
-/* ================ Контент поста ================= */
-.post img, .post video, .post iframe {
+/* =====================================================
+   🖼️ КОНТЕНТ ПОСТА
+===================================================== */
+.post img,
+.post video,
+.post iframe {
     width: 100%;
     border-radius: 10px;
     display: block;
@@ -111,21 +199,26 @@ nav a:hover, nav button:hover {
     height: 360px;
 }
 
-/* ================ Блок лайков и комментариев ================= */
+/* =====================================================
+   ❤️ ЛАЙКИ И 💬 КОММЕНТАРИИ
+===================================================== */
 .post-actions {
     display: flex;
     align-items: center;
     gap: 25px;
     margin-top: 10px;
+    flex-wrap: wrap;
 }
 
-.like-block, .comment-block {
+.like-block,
+.comment-block {
     display: flex;
     align-items: center;
     gap: 6px;
 }
 
-.btn-like, .btn-comment {
+.btn-like,
+.btn-comment {
     background: none;
     border: none;
     cursor: pointer;
@@ -137,17 +230,21 @@ nav a:hover, nav button:hover {
     transition: transform 0.2s, color 0.2s;
 }
 
-.btn-like:hover i, .btn-comment:hover i {
+.btn-like:hover i,
+.btn-comment:hover i {
     transform: scale(1.2);
     color: #007bff;
 }
 
-.like-count, .comment-count {
+.like-count,
+.comment-count {
     font-weight: 600;
     font-size: 15px;
 }
 
-/* ================ Комментарии ================= */
+/* =====================================================
+   💬 КОММЕНТАРИИ
+===================================================== */
 .comments {
     margin-top: 20px;
     padding-left: 20px;
@@ -173,7 +270,9 @@ nav a:hover, nav button:hover {
     text-align: right;
 }
 
-/* ================ Общие кнопки ================= */
+/* =====================================================
+   🔘 ОБЩИЕ КНОПКИ
+===================================================== */
 .btn {
     display: inline-block;
     padding: 10px 16px;
@@ -190,24 +289,29 @@ nav a:hover, nav button:hover {
     transform: scale(1.05);
 }
 
-.btn-success {
+.btn-danger {
     background-color: #ff0000;
 }
 
-.btn-success:hover {
+.btn-danger:hover {
     background-color: #9e1d1d;
 }
 
-/* ================ Кнопка Создать группу ================= */
 .btn-create-group {
-    display: inline-block;
-    padding: 10px 18px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 20px;
     background-color: #2575fc;
     color: white;
-    border-radius: 8px;
-    text-decoration: none;
+    border: none;
+    border-radius: 10px;
     font-weight: bold;
-    transition: background-color 0.3s, transform 0.2s;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
 }
 
 .btn-create-group:hover {
@@ -215,7 +319,9 @@ nav a:hover, nav button:hover {
     transform: scale(1.05);
 }
 
-/* ================ Группа: участники ================= */
+/* =====================================================
+   👥 ГРУППЫ
+===================================================== */
 .group-detail {
     background: #fff;
     border-radius: 10px;
@@ -258,8 +364,10 @@ nav a:hover, nav button:hover {
     gap: 6px;
 }
 
-/* ================ Кнопки группы ================= */
-.btn-join, .btn-leave, .btn-admin, .btn-remove {
+.btn-join,
+.btn-leave,
+.btn-admin,
+.btn-remove {
     padding: 8px 16px;
     border: none;
     border-radius: 8px;
@@ -310,19 +418,31 @@ nav a:hover, nav button:hover {
     transform: scale(1.05);
 }
 
-/* ================ Ссылки ================= */
-.back-link {
-    display: inline-block;
-    margin-top: 15px;
-    color: #333;
-    text-decoration: none;
+/* Приглашения в группу */
+.invite-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    max-width: 400px;
+    margin: 0 auto;
 }
 
-.back-link:hover {
-    text-decoration: underline;
+.invite-container input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
 }
 
-/* ================ Профиль ================= */
+.invite-container button {
+    width: 100%;
+}
+
+/* =====================================================
+   🧍 ПРОФИЛЬ
+===================================================== */
 .profile-stats-wrapper {
     display: flex;
     align-items: center;
@@ -353,7 +473,9 @@ nav a:hover, nav button:hover {
     background-color: #1a5edb;
 }
 
-/* ================ Боковая панель ================= */
+/* =====================================================
+   🧩 ВИДЖЕТЫ
+===================================================== */
 .widgets {
     width: 250px;
     display: flex;
@@ -394,7 +516,9 @@ nav a:hover, nav button:hover {
     object-fit: cover;
 }
 
-/* ================ СТРАНИЦА ВХОДА ================= */
+/* =====================================================
+   🔑 СТРАНИЦА ВХОДА
+===================================================== */
 .login-container {
     background-color: #fff;
     padding: 30px 40px;
@@ -427,8 +551,7 @@ nav a:hover, nav button:hover {
     transition: 0.3s;
 }
 
-.login-container input[type="text"]:focus,
-.login-container input[type="password"]:focus {
+.login-container input:focus {
     border-color: #007bff;
     outline: none;
 }
@@ -454,56 +577,23 @@ nav a:hover, nav button:hover {
     margin-bottom: 10px;
 }
 
-.login-container .register-link {
+.register-link {
     margin-top: 15px;
     font-size: 14px;
 }
 
-.login-container .register-link a {
+.register-link a {
     color: #007bff;
     text-decoration: none;
 }
 
-.login-container .register-link a:hover {
+.register-link a:hover {
     text-decoration: underline;
 }
 
-/* ================= Адаптив для мобильных ================= */
-@media (max-width: 768px) {
-    .container {
-        flex-direction: column;
-    }
-
-    .widgets {
-        display: none;
-    }
-
-    .group-detail {
-        padding: 15px;
-    }
-
-    .group-members-list .member-item {
-        gap: 8px;
-    }
-
-    .member-avatar {
-        width: 25px;
-        height: 25px;
-    }
-
-    .btn, .btn-create-group, .btn-join, .btn-leave, .btn-admin, .btn-remove {
-        width: 100%;
-        text-align: center;
-        padding: 10px 0;
-        font-size: 16px;
-    }
-
-    .login-container {
-        width: 90%;
-        margin: 60px auto;
-    }
-}
-/* ================= Личный чат ================= */
+//* =====================================================
+   💬 ЛИЧНЫЙ ЧАТ
+===================================================== */
 .private-chat {
     background: #fff;
     border-radius: 10px;
@@ -532,36 +622,12 @@ nav a:hover, nav button:hover {
 }
 
 .private-chat-message.mine {
-    background: #d1e7dd; /* Сообщения текущего пользователя */
+    background: #d1e7dd;
 }
 
-.private-chat-input {
-    display: flex;
-    gap: 10px;
-}
-
-.private-chat-input input[type="text"] {
-    flex: 1;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-}
-
-.private-chat-input button {
-    padding: 10px 16px;
-    border: none;
-    border-radius: 8px;
-    background-color: #2575fc;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.private-chat-input button:hover {
-    background-color: #1a5edb;
-}
-/* ================= Чат: сообщения слева/справа с рамкой ================= */
+/* =====================================================
+   💬 ЧАТ С ЛЕВО/ПРАВО
+===================================================== */
 .message-row {
     display: flex;
     gap: 10px;
@@ -569,22 +635,20 @@ nav a:hover, nav button:hover {
     align-items: flex-end;
 }
 
-/* Сообщения пользователя */
 .message-row.sent {
     justify-content: flex-end;
     text-align: right;
 }
 
 .message-row.sent .message-content {
-    background: #d1e7dd; /* светло-зеленый фон */
-    border: 2px solid #28a745; /* зеленая рамка */
+    background: #d1e7dd;
+    border: 2px solid #28a745;
     border-radius: 12px 12px 0 12px;
     padding: 8px 12px;
     max-width: 60%;
     word-wrap: break-word;
 }
 
-/* Сообщения собеседника */
 .message-row.received {
     justify-content: flex-start;
     text-align: left;
@@ -592,14 +656,13 @@ nav a:hover, nav button:hover {
 
 .message-row.received .message-content {
     background: #f1f1f1;
-    border: 2px solid #ccc; /* серая рамка */
+    border: 2px solid #ccc;
     border-radius: 12px 12px 12px 0;
     padding: 8px 12px;
     max-width: 60%;
     word-wrap: break-word;
 }
 
-/* Аватар */
 .message-row .avatar {
     width: 40px;
     height: 40px;
@@ -608,14 +671,157 @@ nav a:hover, nav button:hover {
     flex-shrink: 0;
 }
 
-/* Ник и время */
-.message-row .nickname {
+.nickname {
     font-weight: bold;
-    margin-bottom: 2px;
 }
 
-.message-row .time {
+.time {
     font-size: 11px;
     color: #777;
-    margin-top: 2px;
+}
+
+/* =====================================================
+   ⚠️ УВЕДОМЛЕНИЯ / АДМИН
+===================================================== */
+.new-message-alert {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #007bff;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    z-index: 1000;
+    animation: fadeInOut 4s ease;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(20px); }
+    10%, 90% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(20px); }
+}
+
+.admin-add-event-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #28a745;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    z-index: 1000;
+}
+
+.admin-add-event-btn:hover {
+    background-color: #218838;
+}
+
+/* =====================================================
+   📱 АДАПТИВНОСТЬ
+===================================================== */
+@media (max-width: 1024px) {
+    header {
+        justify-content: center;
+        text-align: center;
+    }
+
+    nav {
+        margin: 10px 0 0 0;
+    }
+
+    nav a,
+    nav button {
+        display: inline-block;
+        margin: 6px;
+        font-size: 15px;
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+    .feed {
+        max-width: 100%;
+    }
+
+    .widgets {
+        position: static;
+        width: 100%;
+        order: 3;
+    }
+}
+
+@media (max-width: 600px) {
+    .btn-create-group {
+        width: 100%; 
+        font-size: 18px;
+        padding: 14px;
+        border-radius: 12px;
+    }
+
+    header h1 {
+        font-size: 20px;
+    }
+
+    .avatar,
+    .author-avatar {
+        width: 60px;
+        height: 60px;
+    }
+
+    .post {
+        padding: 15px;
+    }
+
+    .private-chat {
+        padding: 10px;
+    }
+
+    .private-chat-messages {
+        max-height: 300px;
+    }
+
+    .login-container {
+        width: 95%;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    .profile-stats-wrapper {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 400px) {
+    nav a {
+        font-size: 13px;
+        margin: 3px;
+    }
+
+    .post-actions {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    .comment {
+        padding: 8px;
+    }
+
+    .group-detail h2 {
+        font-size: 18px;
+    }
+
+    .widget h3 {
+        font-size: 16px;
+    }
 }

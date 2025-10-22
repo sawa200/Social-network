@@ -1,0 +1,18 @@
+{% extends "feed/base.html" %}
+{% block title %}Подія: {{ event.title }}{% endblock %}
+{% block content %}
+<h1>{{ event.title }}</h1>
+<p>{{ event.description }}</p>
+<p>Де: {{ event.location }}</p>
+<p>Початок: {{ event.start|date:"d.m.Y H:i" }}</p>
+{% if event.end %}<p>Кінець: {{ event.end|date:"d.m.Y H:i" }}</p>{% endif %}
+<p>Створив: {{ event.creator.nickname|default:event.creator.email }}</p>
+
+{% if request.user == event.creator or request.user.is_staff %}
+    <a href="{% url 'events:event_edit' event.id %}" class="btn">Редагувати</a>
+    <form method="post" action="{% url 'events:event_delete' event.id %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn-leave">Видалити</button>
+    </form>
+{% endif %}
+{% endblock %}

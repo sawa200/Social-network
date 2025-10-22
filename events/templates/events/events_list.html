@@ -1,0 +1,55 @@
+{% extends "feed/base.html" %}
+{% load static %}
+{% block title %}Календар подій{% endblock %}
+
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet" />
+<div class="events-page">
+    <h1>Календар подій</h1>
+
+    <div id="calendar"></div>
+
+    <hr>
+    <a href="{% url 'events:event_create' %}" class="btn">Створити подію</a>
+
+    <h2>Останні події</h2>
+    <ul>
+        {% for e in events %}
+            <li><a href="{% url 'events:event_detail' e.id %}">{{ e.title }}</a> — {{ e.start|date:"d.m.Y H:i" }}</li>
+        {% empty %}
+            <li>Подій поки немає.</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const calendarEl = document.getElementById('calendar');
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        events: "{% url 'events:events_api' %}",
+        eventClick: function(info) {
+            // стандартне перенаправлення по url
+            if (info.event.url) {
+                window.location.href = info.event.url;
+                info.jsEvent.preventDefault();
+            }
+        },
+        selectable: true,
+        select: function(selectionInfo) {
+            // опціонально: перейти на сторінку створення з попередньо заповненими датами
+            const start = selectionInfo.startStr;
+            const end = selectionInfo.endStr;
+            window.location.href = "{% url 'events:event_create' %}?start=" + encodeURIComponent(start) + "&end=" + encodeURIComponent(end);
+        },
+    });
+    calendar.render();
+});
+</script>
+{% endblock %}

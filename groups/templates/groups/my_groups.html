@@ -1,10 +1,22 @@
-<h2>Мои группы 👥</h2>
-<ul>
-    {% for group in groups %}
-        <li>
-            <a href="{% url 'groups:group_detail' group.id %}">{{ group.name }}</a>
-        </li>
-    {% empty %}
-        <li>Вы не состоите ни в одной группе 😢</li>
-    {% endfor %}
-</ul>
+{% extends "feed/base.html" %}
+{% block title %}Мої групи{% endblock %}
+
+{% block content %}
+<div class="my-groups-container">
+    <h2>Мої групи</h2>
+
+    {% if groups %}
+        <div class="group-list">
+            {% for group in groups %}
+                <div class="group-card">
+                    <h3>{{ group.name }}</h3>
+                    <p>Створена {{ group.created_at|date:"d.m.Y" }}</p>
+                    <a href="{% url 'groups:group_detail' group.id %}" class="btn">Перейти</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Ти ще не створив жодної групи 😅</p>
+    {% endif %}
+</div>
+{% endblock %}

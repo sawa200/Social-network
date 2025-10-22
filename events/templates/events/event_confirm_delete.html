@@ -1,0 +1,10 @@
+{% extends "feed/base.html" %}
+{% block content %}
+<h2>Видалити подію?</h2>
+<p>Ви впевнені, що хочете видалити "{{ event.title }}"?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn-leave">Так, видалити</button>
+    <a href="{% url 'events:event_detail' event.id %}" class="btn">Ні, повернутись</a>
+</form>
+{% endblock %}

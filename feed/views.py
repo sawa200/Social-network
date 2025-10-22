@@ -24,7 +24,8 @@ def index(request):
         member_count=Count('members')
     ).order_by('-member_count')[:5]
 
-    upcoming_events = Event.objects.order_by('date')[:5]
+    upcoming_events = Event.objects.order_by('start')[:5]
+
 
     return render(request, "feed/index.html", {
         "posts": posts,

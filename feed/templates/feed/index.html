@@ -16,8 +16,13 @@
             <div class="feed-buttons">
                 <a href="{% url 'users:profile' %}" class="btn">Мій профіль 📝</a>
                 <a href="{% url 'feed:create_post' %}" class="btn">Створити допис ✏️</a>
-                <a href="{% url 'groups:create_group' %}" class="btn-create-group">Створити групу 👥</a>
+                <a href="{% url 'groups:create_group' %}" class="btn">Створити групу 👥</a>
             </div>
+            {% if user.is_staff %}
+            <a href="{% url 'events:add_event' %}" class="admin-add-event-btn">
+                ➕ Добавить событие
+            </a>
+            {% endif %}
 
         {% else %}
             <p>Привіт, гість! 🌟</p>
@@ -119,7 +124,7 @@
             <h3>🎉 Події</h3>
             <ul>
                 {% for e in upcoming_events %}
-                    <li>{{ e.name }} — {{ e.date }}</li>
+                    <li>{{ e.title }} — {{ e.start }}</li>
                 {% endfor %}
             </ul>
         </div>
