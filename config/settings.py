@@ -82,21 +82,23 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # === База данных ===
 # Автоматически определяем, где запущен проект: в Docker или локально
-IS_DOCKER = os.environ.get('IS_DOCKER', '0') == '1'
+IS_DOCKER = os.environ.get('DOCKER', '0') == '1'
 
-DB_HOST = 'db' if IS_DOCKER else 'localhost'
+# if IS_DOCKER:
+#     DB_HOST = 'db'  
+# else:
+#     DB_HOST = 'localhost'  
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': os.environ.get('DB_ENGINE', 'django.db.backends.postgresql'),
         'NAME': os.environ.get('POSTGRES_DB', 'social_network'),
         'USER': os.environ.get('POSTGRES_USER', 'postgres'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'postgres'),
-        'HOST': DB_HOST,
+        "HOST": os.getenv("DB_HOST", "db"), # localhost
         'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
-
 
 
 # === Валидация паролей ===

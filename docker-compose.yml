@@ -2,25 +2,30 @@ version: '3.9'
 services:
   db:
     image: postgres:16
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: social_network
-    ports:
-      - "5432:5432"
+    container_name: social_db
+    restart: unless-stopped
+    env_file: .env
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    ports: ["5432:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
 
   web:
     build: .
-    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-    volumes:
-      - .:/code
-    ports:
-      - "8000:8000"
+    container_name: social_web
+    env_file: .env
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/code        # (на macOS/Linux)
+      # - D:/Social_network:/code  # (якщо Windows без WSL)
+    ports: ["8000:8000"]
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
 
 volumes:
   postgres_data:
