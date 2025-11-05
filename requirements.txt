@@ -1,0 +1,6 @@
+Django==5.2.6
+django-widget-tweaks
+djangorestframework
+django-cors-headers
+Pillow
+psycopg2-binary
