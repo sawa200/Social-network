@@ -14,18 +14,22 @@ services:
       - "5432:5432"
 
   web:
-    build:
-      context: .
-      args:
-        REPO_URL: https://github.com/sawa200/Social-network.git
+    build: .
     container_name: social_web
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - D:/Social_network:/code 
     ports:
       - "8000:8000"
     depends_on:
       - db
-    env_file:
-      - .env
-    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    environment:
+      POSTGRES_DB: social_network
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      DB_HOST: db
+      DB_PORT: 5432
+
 
 volumes:
   postgres_data:
