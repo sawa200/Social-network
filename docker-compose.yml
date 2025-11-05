@@ -1,6 +1,4 @@
-
 version: '3.9'
-
 services:
   db:
     image: postgres:16
@@ -16,22 +14,18 @@ services:
       - "5432:5432"
 
   web:
-    build: .
+    build:
+      context: .
+      args:
+        REPO_URL: https://github.com/sawa200/Social-network.git
     container_name: social_web
-    command: bash -c "python manage.py migrate && python manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000"
-    volumes:
-      - .:/code
     ports:
       - "8000:8000"
     depends_on:
       - db
-    environment:
-      - DEBUG=True
-      - POSTGRES_DB=social_network
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - DB_HOST=db
-      - DB_PORT=5432
+    env_file:
+      - .env
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
 
 volumes:
   postgres_data:
